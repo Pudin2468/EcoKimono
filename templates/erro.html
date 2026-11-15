@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block titulo %}Página não encontrada{% endblock %}
+
+{% block conteudo %}
+<section class="pagina estreita">
+  <h1>{{ titulo|default("Página não encontrada") }}</h1>
+  <p>{{ mensagem|default("Esse endereço não existe no EcoKimono. Volte para a lista e escolha um kimono.") }}</p>
+  <p><a class="botao" href="/kimonos">Ver kimonos</a></p>
+</section>
+{% endblock %}
