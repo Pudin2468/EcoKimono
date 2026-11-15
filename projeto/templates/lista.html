@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status, foto, uso %}
+
+{% block titulo %}Kimonos{% endblock %}
+
+{% block conteudo %}
+{# Conta quantos kimonos estão disponíveis, só para mostrar no texto #}
+{% set total = kimonos|length %}
+{% set livres = kimonos|selectattr('status.value', 'equalto', 'DISPONIVEL')|list|length %}
+
+<section class="pagina">
+  <h1>Kimonos no tatame</h1>
+  <p class="lead">Disponíveis agora: {{ livres }} de {{ total }}. Escolha o tamanho que serve e peça.</p>
+
+  <!-- Doar: quem não entrou vê o pop-up de login (o link já leva ao login, mesmo sem JavaScript) -->
+  <p>
+    {% if usuario %}
+      <a class="botao botao-leve" href="/kimonos/novo">Doar um kimono</a>
+    {% else %}
+      <a class="botao botao-leve" data-login href="/login?proximo=/kimonos/novo">Doar um kimono</a>
+    {% endif %}
+  </p>
+
+  {% if kimonos %}
+    <!-- Filtros: o app.js liga os botões. Sem JavaScript, eles ficam escondidos e a lista aparece inteira. -->
+    <div class="filtros" role="group" aria-label="Filtrar por situação" hidden>
+      <button type="button" class="chip" data-filtro="DISPONIVEL" aria-pressed="true">Disponíveis</button>
+      <button type="button" class="chip" data-filtro="RESERVADO" aria-pressed="false">Reservados</button>
+      <button type="button" class="chip" data-filtro="ENTREGUE" aria-pressed="false">Entregues</button>
+      <button type="button" class="chip" data-filtro="todos" aria-pressed="false">Todos</button>
+    </div>
+
+    <ul class="etiquetas">
+      {% for k in kimonos %}
+        <!-- etiqueta-disponivel / reservado / entregue muda a cor do tamanho; data-status serve ao filtro -->
+        <li class="etiqueta etiqueta-{{ k.status.value|lower }}" data-status="{{ k.status.value }}">
+          <span class="tamanho"><span class="sr">Tamanho </span>{{ k.tamanho }}</span>
+          {{ foto(k) }}
+
+          <div class="dados">
+            <h2><span class="gi" data-cor="{{ k.cor|lower }}"></span>Kimono {{ k.cor }}</h2>
+            <p>{{ uso(k) }}</p>
+            {# Nome e idade da criança só aparecem para quem está logado #}
+            {% if usuario and k.doador in atletas %}
+              <p class="doador">Doado por {{ atletas[k.doador].nome }}, {{ atletas[k.doador].idade }} anos</p>
+            {% endif %}
+          </div>
+
+          <div class="acao">
+            {{ status(k.status.value) }}
+            {% if k.status.value == "DISPONIVEL" %}
+              {% if usuario %}
+                <a class="botao" href="/kimonos/{{ k.id }}/repassar" aria-label="Pedir kimono {{ k.cor }} {{ k.tamanho }}">Pedir</a>
+              {% else %}
+                <!-- Sem login: o link leva ao /login (funciona até sem JavaScript);
+                     com JavaScript, o data-login abre o pop-up antes. -->
+                <a class="botao" data-login href="/login?proximo=/kimonos/{{ k.id }}/repassar" aria-label="Pedir kimono {{ k.cor }} {{ k.tamanho }}">Pedir</a>
+              {% endif %}
+            {% endif %}
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+
+    <p class="vazio" id="sem-resultado" hidden>Nenhum kimono nessa situação. Escolha outro filtro.</p>
+  {% else %}
+    <p class="vazio">Nenhum kimono cadastrado ainda. Quando alguém doar, ele aparece aqui.</p>
+  {% endif %}
+</section>
+{% endblock %}

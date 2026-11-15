@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status, foto, uso %}
+
+{% block titulo %}Pedir kimono{% endblock %}
+
+{% block conteudo %}
+<section class="pagina estreita">
+  <a class="voltar" href="/kimonos">Voltar para a lista</a>
+
+  {% if kimono %}
+    <h1>Pedir kimono</h1>
+
+    <!-- Resumo do kimono escolhido -->
+    <div class="etiqueta resumo etiqueta-{{ kimono.status.value|lower }}">
+      <span class="tamanho"><span class="sr">Tamanho </span>{{ kimono.tamanho }}</span>
+      {{ foto(kimono) }}
+      <div class="dados">
+        <h2><span class="gi" data-cor="{{ kimono.cor|lower }}"></span>Kimono {{ kimono.cor }}</h2>
+        <p>{{ uso(kimono) }}</p>
+      </div>
+      <div class="acao">{{ status(kimono.status.value) }}</div>
+    </div>
+
+    {% if kimono.status.value == "DISPONIVEL" %}
+      <!-- method="post": a rota do Flask precisa aceitar POST.
+           Os data-* alimentam a janela de confirmação do app.js. -->
+      <form method="post" class="formulario"
+            data-titulo="Pedir kimono {{ kimono.cor }}?"
+            data-confirmar="O kimono {{ kimono.tamanho }} ficará reservado para o atleta escolhido até a entrega no treino."
+            data-sim="Pedir kimono" data-nao="Voltar">
+        <input type="hidden" name="csrf" value="{{ csrf_token }}">
+        <label for="destinatario_id">Quem vai receber?</label>
+        <select id="destinatario_id" name="destinatario_id" required>
+          <option value="" disabled selected>Escolha o atleta</option>
+          {% for a in atletas %}
+            <option value="{{ a.id }}">{{ a.nome }}, {{ a.idade }} anos</option>
+          {% endfor %}
+        </select>
+
+        <!-- Quem está logado é o responsável: o login já vale como o "de acordo" -->
+        <p class="nota">Pedido feito por <strong>{{ usuario.nome }}</strong>.</p>
+
+        <button class="botao" type="submit">Pedir kimono</button>
+      </form>
+    {% else %}
+      <p class="vazio">Este kimono já não está disponível. Volte para a lista e escolha outro.</p>
+    {% endif %}
+
+  {% else %}
+    <h1>Kimono não encontrado</h1>
+    <p>Esse número não existe na lista. Volte e escolha um dos kimonos disponíveis.</p>
+  {% endif %}
+</section>
+{% endblock %}

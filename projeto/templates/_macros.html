@@ -1,0 +1,21 @@
+{# Peça reaproveitável: o selo colorido do status.
+   O valor guardado no Python (DISPONIVEL) vira o texto bonito (Disponível). #}
+{% macro status(valor) %}
+  {% set nomes = {'DISPONIVEL': 'Disponível', 'RESERVADO': 'Reservado', 'ENTREGUE': 'Entregue'} %}
+  <span class="selo selo-{{ valor|lower }}">{{ nomes[valor] }}</span>
+{% endmacro %}
+
+{# A foto do kimono. Kimonos antigos (sem foto) mostram uma caixa "Sem foto". #}
+{% macro foto(k) %}
+  {% if k.foto %}
+    <img class="foto" src="{{ url_for('static', filename=k.foto) }}" width="72" height="72" loading="lazy"
+         alt="Foto do kimono {{ k.cor }} tamanho {{ k.tamanho }}">
+  {% else %}
+    <span class="foto foto-vazia" aria-hidden="true">Sem foto</span>
+  {% endif %}
+{% endmacro %}
+
+{# Mostra o tempo de uso; se o kimono for antigo e não tiver, mostra o estado de conservação. #}
+{% macro uso(k) %}
+  {%- if k.tempo_de_uso %}Tempo de uso: {{ k.tempo_de_uso }}{% else %}{{ k.estado_de_conservacao|capitalize }}{% endif -%}
+{% endmacro %}

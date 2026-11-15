@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status %}
+
+{% block titulo %}Início{% endblock %}
+
+{% block conteudo %}
+
+<section class="hero">
+  <div class="hero-texto">
+    <h1>Cresceu? O kimono passa para o próximo.</h1>
+    <p class="lead">No EcoKimono, famílias do Jiu-Jitsu repassam kimonos e faixas que ficaram pequenos, direto no tatame.</p>
+    <p class="hero-acoes">
+      <a class="botao" href="/kimonos">Ver kimonos</a>
+      <a class="botao botao-leve" href="/repasses">Ver repasses</a>
+    </p>
+  </div>
+
+  <!-- Régua de crescimento: cada faixa é um tamanho, do menor (claro) ao maior (escuro) -->
+  <div class="hero-regua">
+    <div class="regua" aria-hidden="true">
+      <span class="tag tag-1" style="--n:0">M1</span>
+      <span class="tag tag-2" style="--n:1">M2</span>
+      <span class="tag tag-3" style="--n:2">A1</span>
+      <span class="tag tag-4" style="--n:3">A2</span>
+    </div>
+    <p class="regua-legenda">Cada tamanho serve por uma temporada. Depois, passa adiante.</p>
+  </div>
+</section>
+
+<section class="secao">
+  <h2>Como funciona</h2>
+  <!-- As cores dos passos são as mesmas dos status que aparecem na lista -->
+  <ol class="passos">
+    <li class="passo-verde">
+      <h3>Escolher</h3>
+      {{ status('DISPONIVEL') }}
+      <p>Veja os kimonos disponíveis e peça o tamanho que serve.</p>
+    </li>
+    <li class="passo-laranja">
+      <h3>Combinar</h3>
+      {{ status('RESERVADO') }}
+      <p>O kimono fica reservado para você até a entrega.</p>
+    </li>
+    <li class="passo-cinza">
+      <h3>Entregar</h3>
+      {{ status('ENTREGUE') }}
+      <p>No treino, a entrega é confirmada e o kimono segue para a nova família.</p>
+    </li>
+  </ol>
+</section>
+
+<section class="secao">
+  <div class="motivo">
+    <h2>Por que repassar</h2>
+    <p>Crianças crescem rápido, e o algodão trançado do kimono dura muito mais que uma temporada. Repassar gasta menos recursos e pesa menos no bolso das famílias, para que mais crianças continuem no tatame.</p>
+  </div>
+</section>
+
+{% endblock %}
