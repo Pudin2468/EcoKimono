@@ -23,6 +23,7 @@
       <a href="/" {% if request.path == '/' %}aria-current="page"{% endif %}>Início</a>
       <a href="/kimonos" {% if request.path.startswith('/kimonos') %}aria-current="page"{% endif %}>Kimonos</a>
       <a href="/repasses" {% if request.path.startswith('/repasses') %}aria-current="page"{% endif %}>Repasses</a>
+      <a href="/duvidas" {% if request.path == '/duvidas' %}aria-current="page"{% endif %}>Dúvidas</a>
     </nav>
 
     <!-- Conta: mostra quem está logado e o botão Sair (é um formulário POST, não um link) -->

@@ -84,3 +84,44 @@ if (campoFoto && previa) {
     }
   });
 }
+
+// 5) Chatbot de dúvidas ------------------------------------------------------
+// Envia a pergunta sem recarregar a página. Sem JavaScript, o formulário
+// continua funcionando: o Flask devolve a página inteira com a resposta.
+const formChat = document.getElementById("form-chat");
+if (formChat) {
+  const conversa = document.getElementById("conversa");
+  const campoPergunta = document.getElementById("pergunta");
+
+  function mostrarMensagem(texto, autor) {
+    const p = document.createElement("p");
+    p.className = "mensagem mensagem-" + autor;
+    p.textContent = texto;          // textContent: o texto nunca vira HTML (evita XSS)
+    conversa.appendChild(p);
+    p.scrollIntoView({ block: "nearest" });
+  }
+
+  formChat.addEventListener("submit", async (evento) => {
+    evento.preventDefault();
+    const pergunta = campoPergunta.value.trim();
+    if (!pergunta) return;
+
+    mostrarMensagem(pergunta, "voce");
+    const dados = new FormData(formChat);   // leva junto o campo csrf escondido
+    campoPergunta.value = "";
+
+    try {
+      const resposta = await fetch(formChat.action, {
+        method: "POST",
+        body: dados,
+        headers: { "Accept": "application/json" },
+      });
+      if (!resposta.ok) throw new Error("status " + resposta.status);
+      const json = await resposta.json();
+      mostrarMensagem(json.resposta, "bot");
+    } catch (erro) {
+      mostrarMensagem("Não consegui responder agora. Recarregue a página e tente de novo.", "bot");
+    }
+    campoPergunta.focus();
+  });
+}
