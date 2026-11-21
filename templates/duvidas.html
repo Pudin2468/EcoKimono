@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block titulo %}Dúvidas{% endblock %}
+
+{% block conteudo %}
+<section class="pagina estreita">
+  <h1>Tire sua dúvida</h1>
+  <p class="lead">Pergunte sobre como doar, pedir um kimono, entregas ou tamanhos.</p>
+
+  <!-- A conversa. O app.js acrescenta as mensagens novas aqui. -->
+  <div class="conversa" id="conversa" aria-live="polite">
+    <p class="mensagem mensagem-bot">Oi! Sou o assistente do EcoKimono. Como posso ajudar?</p>
+    {% if pergunta %}
+      <p class="mensagem mensagem-voce">{{ pergunta }}</p>
+      <p class="mensagem mensagem-bot">{{ resposta }}</p>
+    {% endif %}
+  </div>
+
+  <!-- O campo csrf é obrigatório em todo POST do site (veja conferir_csrf no app.py) -->
+  <form method="post" action="/duvidas" class="formulario formulario-chat" id="form-chat">
+    <input type="hidden" name="csrf" value="{{ csrf_token }}">
+    <label for="pergunta" class="sr">Sua pergunta</label>
+    <input id="pergunta" name="pergunta" type="text" maxlength="300" autocomplete="off"
+           placeholder="Ex.: Como faço para doar um kimono?" required>
+    <button type="submit" class="botao">Enviar</button>
+  </form>
+</section>
+{% endblock %}

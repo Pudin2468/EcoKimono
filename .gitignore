@@ -1,0 +1,11 @@
+# Arquivos que o Python cria sozinho ao rodar (não precisam ir pro GitHub)
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Arquivo temporário do Code Runner (VS Code)
+tempCodeRunnerFile.py
+
+# Fotos enviadas pelo site e segredos (chaves de API, senhas)
+static/uploads/
+.env

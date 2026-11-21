@@ -518,3 +518,21 @@ dialog h2 { margin-bottom: .6rem; font-size: 1.4rem; }
 }
 .doador, .contato { margin: .15rem 0 0; font-size: .95rem; }
 .contato a { font-weight: 700; }
+
+/* ---------- Chatbot de dúvidas ---------- */
+.conversa {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  margin: 1.5rem 0 1rem;
+}
+.mensagem {
+  margin: 0;
+  max-width: 85%;
+  padding: .7rem 1rem;
+  border-radius: var(--raio);
+}
+.mensagem-bot  { align-self: flex-start; background: var(--superficie); border-left: 6px solid var(--faixa-azul); border-radius: 0; }
+.mensagem-voce { align-self: flex-end; background: var(--faixa-azul); color: #fff; }
+.formulario-chat { grid-template-columns: 1fr auto; align-items: center; }
+.formulario-chat .botao { margin-top: 0; }

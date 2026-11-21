@@ -3,7 +3,8 @@ import secrets
 from functools import wraps
 
 from flask import (Flask, render_template, request, redirect, flash,
-                    session, abort, g)
+                    session, abort, g, jsonify)
+from src.chatbot import responder
 from src.mocks import KIMONO, ATLETAS
 from src.models import criar_repasse, concluir_repasse, kimono as Kimono, atleta as Atleta
 from src.usuarios import autenticar, achar_usuario_por_id
@@ -225,6 +226,20 @@ def concluir(repasse_id):
     else:                                                  # o for terminou sem achar nenhuma
         flash("Repasse não encontrado.", "erro")
     return redirect("/repasses")
+
+
+# ---------- Chatbot de dúvidas ----------
+@app.route("/duvidas", methods=["GET", "POST"])
+def duvidas():
+    """Página do chatbot. O app.js envia a pergunta sem recarregar a página e
+    recebe JSON. Sem JavaScript, o formulário funciona do jeito normal."""
+    if request.method == "POST":
+        pergunta = request.form.get("pergunta", "").strip()
+        resposta = responder(pergunta)
+        if request.accept_mimetypes.best == "application/json":   # pedido feito pelo app.js
+            return jsonify({"resposta": resposta})
+        return render_template("duvidas.html", pergunta=pergunta, resposta=resposta)
+    return render_template("duvidas.html")
 
 
 # ---------- Páginas de erro ----------
